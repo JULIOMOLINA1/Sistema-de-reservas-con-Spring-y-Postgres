@@ -14,13 +14,13 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    // 1. Crear reservación (el sistema reconoce al customer por DNI)
+    // Crear reservación (el sistema reconoce al customer por DNI)
     @PostMapping
     public ResponseEntity<ReservationResponseDTO> createReservation(@RequestBody ReservationRequestDTO reservationRequestDTO){
         return ResponseEntity.ok(reservationService.createReservation(reservationRequestDTO));
     }
 
-    // 2. Buscar mi reservación por DNI
+    // Buscar mi reservación por DNI
     @GetMapping("/search/{dni}")
     public ResponseEntity<ReservationResponseDTO> findReservationByDni(@PathVariable String dni) {
         ReservationResponseDTO reservation = reservationService.findReservationByDni(dni);
@@ -30,7 +30,7 @@ public class ReservationController {
         return ResponseEntity.notFound().build();
     }
 
-    // 3. Cancelar mi reservación por DNI
+    // Cancelar mi reservación por DNI
     @PutMapping("/cancel/{dni}")
     public ResponseEntity<ReservationResponseDTO> cancelReservationByDni(@PathVariable String dni) {
         ReservationResponseDTO cancelledReservation = reservationService.cancelReservationByDni(dni);
@@ -40,7 +40,7 @@ public class ReservationController {
         return ResponseEntity.notFound().build();
     }
 
-    // 4. Obtener todas las reservas (temporal para debugging)
+    // Obtener todas las reservas (temporal para debugging)
     @GetMapping
     public ResponseEntity<java.util.List<ReservationResponseDTO>> getAllReservations() {
         try {
@@ -52,7 +52,7 @@ public class ReservationController {
         }
     }
 
-        // 5. Listar todas las reservas pendientes por DNI (ordenadas desc)
+        // Listar todas las reservas pendientes por DNI (ordenadas desc)
         @GetMapping("/dni/{dni}/pending")
         public ResponseEntity<java.util.List<ReservationResponseDTO>> findPendingByDni(@PathVariable String dni) {
             return ResponseEntity.ok(reservationService.findPendingByDni(dni));
