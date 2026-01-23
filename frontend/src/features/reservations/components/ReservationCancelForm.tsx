@@ -37,12 +37,11 @@ export function ReservationCancelForm() {
       successMessage: null,
     });
     setReservations([]);
-    
+    setDni("");
 
     try {
       const data = await findPendingReservationsByDni(dni);
       setReservations(data);
-      setDni("");
       setStatus({
         loading: false,
         error: null,

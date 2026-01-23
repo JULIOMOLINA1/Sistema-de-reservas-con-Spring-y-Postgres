@@ -34,7 +34,7 @@ export const CategoryView = ({ categoryId, title }: CategoryViewProps) => {
   if (loading)
     return (
       <div className="text-center font-bold text-gray-900 p-20">
-        Loading delights...
+        Loading delights
       </div>
     );
   if (error)

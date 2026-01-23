@@ -25,12 +25,11 @@ export function ReservationSearchForm() {
 
     setStatus({ loading: true, error: null, searched: false });
     setReservations([]);
-   
+    setDni("");
 
     try {
       const data = await findPendingReservationsByDni(dni);
       setReservations(data);
-      setDni("");
       setStatus({ loading: false, error: null, searched: true });
     } catch (err: any) {
       setStatus({ loading: false, error: err.message, searched: true });

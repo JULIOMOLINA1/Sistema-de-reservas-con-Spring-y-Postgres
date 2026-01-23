@@ -136,7 +136,7 @@ export const CustomerForm = () => {
                 value={formData.phoneNumber}
                 onChange={handleChange}
                 required
-                pattern="\d{9}"
+                pattern="\d{1,9}"
                 maxLength={9}
                 className='max-sm:w-full px-4 py-2 border border-gray-300 md:border-0 md:border-b-2 max-sm:rounded-lg outline-none transition-all'
                 placeholder='9 digits'

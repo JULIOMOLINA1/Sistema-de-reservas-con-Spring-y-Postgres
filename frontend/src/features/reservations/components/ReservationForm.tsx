@@ -107,8 +107,9 @@ export const ReservationForm = () => {
                 />
             </div>
             <div className='flex flex-col'>
-                <label className=' text-sm font-semibold text-gray-700'>Date & Time</label>
+                <label className=' text-sm font-semibold text-gray-700' htmlFor="date&time">Date & Time</label>
                 <input
+                id="date&time"
                 type='datetime-local'
                 name='reservationDateTime'
                 value={formData.reservationDateTime}
@@ -155,6 +156,15 @@ export const ReservationForm = () => {
                    {status.loading? 'Working...': 'Make'}     
                 </button>
             </div>
+            <div>
+                <p>
+                    For reservations of 7 or more people, please contact us.
+                </p>
+                <p>
+                    Consider our business hours to make your reservation.
+                </p>
+            </div>    
+
         </form>
     </div>
   )
