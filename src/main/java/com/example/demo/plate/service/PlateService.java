@@ -4,8 +4,12 @@ import com.example.demo.plate.dto.PlateResponseDTO;
 import com.example.demo.plate.entity.PlateEntity;
 import com.example.demo.plate.mapper.PlateMapper;
 import com.example.demo.plate.repository.PlateRepository;
+import com.example.demo.shared.exception.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,14 +22,6 @@ public class PlateService {
     // Listar todos los platos disponibles
     public List<PlateResponseDTO> getAllPlates(){
         List<PlateEntity> plates = plateRepository.findByIsAvailableTrue();
-        return plates.stream()
-                .map(PlateMapper::toResponseDTO)
-                .collect(Collectors.toList());
-    }
-
-    // Listar platos por categoría (por nombre)
-    public List<PlateResponseDTO> getPlatesByCategory(String categoryName){
-        List<PlateEntity> plates = plateRepository.findByCategoryNameAndIsAvailableTrue(categoryName);
         return plates.stream()
                 .map(PlateMapper::toResponseDTO)
                 .collect(Collectors.toList());
@@ -60,12 +56,13 @@ public class PlateService {
     }
 
     // Cambiar disponibilidad de un plato (para admin)
+    @Transactional
     public PlateResponseDTO updatePlateAvailability(Integer plateId, Boolean isAvailable){
         PlateEntity plate = plateRepository.findById(plateId)
-                .orElseThrow(() -> new RuntimeException("Plato no encontrado con ID: " + plateId));
+                .orElseThrow(() -> new ResourceNotFoundException("It wasn't found a plate with ID: " + plateId));
 
         plate.setIsAvailable(isAvailable);
-        plate.setUpdatedAt(java.time.LocalDateTime.now());
+        plate.setUpdatedAt(LocalDateTime.now());
 
         PlateEntity savedPlate = plateRepository.save(plate);
         return PlateMapper.toResponseDTO(savedPlate);

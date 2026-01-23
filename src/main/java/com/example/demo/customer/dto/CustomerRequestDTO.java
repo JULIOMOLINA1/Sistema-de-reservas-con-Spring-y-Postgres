@@ -1,7 +1,6 @@
 package com.example.demo.customer.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,25 +11,30 @@ import java.time.LocalDate;
 @Setter
 public class CustomerRequestDTO {
 
-    @NotNull(message = "The name is required.")
-    @Size(max = 25)
+    @NotBlank(message = "The name is required.")
+    @Size(min=2, max = 25, message = "Name must be between 2 and 25 characters.")
     private String firstName;
 
-    @NotNull(message = "the last name is required.")
-    @Size(max = 25)
+    @NotBlank(message = "the last name is required.")
+    @Size(min=2, max = 25, message = "Last name must be between 2 and 25 characters.")
     private String lastName;
 
-    @NotNull(message = "DNI is required.")
-    @Size(max = 8)
+    @NotBlank(message = "DNI is required.")
+    @Size(min=8, max = 8, message = "DNI must be exactly 8 characters.")
+    @Pattern(regexp = "\\d+", message = "DNI must contain only numbers.")
     private String dni;
 
-    @NotNull(message = "Phone number is required.")
-    @Size(max = 11)
+    @NotBlank(message = "Phone number is required.")
+    @Size(max = 9)
+    @Pattern(regexp = "\\d+", message = "Phone must contain only numbers.")
     private String phoneNumber;
 
-    @NotNull(message = "An email is requiered.")
+    @NotBlank(message = "Email is required.")
+    @Email(message = "Invalid email format.")
     private String email;
 
+    @NotNull(message = "Birth date is required.")
+    @Past(message = "Birth date must be in the past.")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 

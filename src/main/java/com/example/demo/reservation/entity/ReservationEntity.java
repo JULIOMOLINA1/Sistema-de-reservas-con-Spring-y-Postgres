@@ -2,8 +2,13 @@ package com.example.demo.reservation.entity;
 
 import com.example.demo.customer.entity.CustomerEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +17,9 @@ import java.time.LocalDateTime;
 @Table(name = "reservations")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class ReservationEntity {
 
     @Id
@@ -32,37 +40,21 @@ public class ReservationEntity {
     @Column(name = "number_of_guests")
     private Integer numberOfGuests;
 
-    @Column(name = "used_date_time")
-    private LocalDateTime usedDateTime;
-
     @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "special_requests")
+    @Column(name = "special_requests", length = 500)
     private String specialRequests;
 
-    @Column(name = "total_amount")
+    @Column(name = "total_amount", precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @Column(name = "created_at",nullable = false, updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", insertable = false, updatable = false)
+    @Column(name = "updated_at")
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public ReservationEntity(){}
-
-    public ReservationEntity(Integer reservationId, CustomerEntity customer, LocalDateTime reservationDateTime, LocalDateTime expirationDateTime, Integer numberOfGuests, LocalDateTime usedDateTime, String status, String specialRequests, BigDecimal totalAmount, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.reservationId = reservationId;
-        this.customer = customer;
-        this.reservationDateTime = reservationDateTime;
-        this.expirationDateTime = expirationDateTime;
-        this.numberOfGuests = numberOfGuests;
-        this.usedDateTime = usedDateTime;
-        this.status = status;
-        this.specialRequests = specialRequests;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

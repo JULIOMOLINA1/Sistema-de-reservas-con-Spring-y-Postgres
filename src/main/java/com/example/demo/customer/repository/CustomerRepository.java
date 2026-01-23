@@ -10,10 +10,6 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Intege
     //For looking for a client by dni
     Optional<CustomerEntity> findByDni(String dni);
 
-    //For looking for a client by email
-    Optional<CustomerEntity>findByEmail(String email);
-
-
 }
 
 

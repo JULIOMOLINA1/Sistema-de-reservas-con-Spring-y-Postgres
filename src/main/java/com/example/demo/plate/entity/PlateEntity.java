@@ -1,10 +1,13 @@
 package com.example.demo.plate.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Set;
 import java.math.BigDecimal;
@@ -14,6 +17,9 @@ import java.time.LocalDateTime;
 @Table(name = "plates")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class PlateEntity {
 
     @Id
@@ -27,41 +33,28 @@ public class PlateEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name="image_url", length = 500)
+    private String imageUrl;
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     @Column(name = "is_available")
     private Boolean isAvailable;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = true;
-
     @Column(name = "created_at", nullable = false)
+    @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
+    @LastModifiedDate
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.JOIN)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "plate_categories",
             joinColumns = @JoinColumn(name = "plate_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<CategoryEntity> categories;
-
-    public PlateEntity() {}
-
-    public PlateEntity(Integer plateId, String name, String description, BigDecimal price, Boolean isAvailable, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt, Set<CategoryEntity> categories) {
-        this.plateId = plateId;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.isAvailable = isAvailable;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.categories = categories;
-    }
 }

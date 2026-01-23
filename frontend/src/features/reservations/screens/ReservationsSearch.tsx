@@ -1,0 +1,15 @@
+import { ReservationSearchForm } from "../components/ReservationSearchForm";
+
+
+
+export function ReservationsSearch() {
+  return (
+    <div className="flex flex-col overflow-hidden flex-1 md:p-0 w-full md:min-h-screen md:flex-row">
+          <ReservationSearchForm/>
+          <div className="max-sm:hidden sm:hidden md:bg-amber-300 md:h-screen overflow-hidden md:block md:w-1/2 relative">
+                <img src="https://res.cloudinary.com/dteypkycm/image/upload/f_auto,q_auto/v1768275167/Gemini_Generated_Image_27yxfu27yxfu27yx_yvfdp2.png" className="object-cover w-full h-full absolute inset-0"/>
+                <div className="absolute inset-0 bg-white/40 z-0"></div>
+          </div>
+        </div>
+  )
+}

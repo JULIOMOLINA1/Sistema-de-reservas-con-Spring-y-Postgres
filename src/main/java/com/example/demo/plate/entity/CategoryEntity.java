@@ -1,8 +1,11 @@
 package com.example.demo.plate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Set;
 import java.time.LocalDateTime;
@@ -11,6 +14,9 @@ import java.time.LocalDateTime;
 @Table(name = "categories")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class CategoryEntity {
 
     @Id
@@ -28,23 +34,15 @@ public class CategoryEntity {
     private Boolean isActive = true;
 
     @Column(name = "created_at", nullable = false)
+    @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at", nullable = false)
+    @LastModifiedDate
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    @ToString.Exclude
     private Set<PlateEntity> plates;
-
-    public CategoryEntity() {}
-
-    public CategoryEntity(Integer categoryId, String name, String description, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt, Set<PlateEntity> plates) {
-        this.categoryId = categoryId;
-        this.name = name;
-        this.description = description;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.plates = plates;
-    }
 }

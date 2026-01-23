@@ -1,7 +1,9 @@
 package com.example.demo.customer.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @Table(name = "customers")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class CustomerEntity {
 
@@ -45,26 +49,11 @@ public class CustomerEntity {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    public CustomerEntity () {}
-
-    public CustomerEntity(Integer customerId, String firstName, String lastName, String dni, String phoneNumber, String email, LocalDate birthDate, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.customerId = customerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dni = dni;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.birthDate = birthDate;
-        this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

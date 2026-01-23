@@ -8,7 +8,6 @@ import com.example.demo.reservation.enums.ReservationStatus;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Component
 public class ReservationMapper {
@@ -20,8 +19,6 @@ public class ReservationMapper {
         }
 
         ReservationEntity reservationEntity = new ReservationEntity();
-
-
         reservationEntity.setReservationDateTime(reservationRequestDTO.getReservationDateTime());
         reservationEntity.setNumberOfGuests(reservationRequestDTO.getNumberOfGuests());
         reservationEntity.setSpecialRequests(reservationRequestDTO.getSpecialRequests());
@@ -31,12 +28,10 @@ public class ReservationMapper {
         reservationEntity.setStatus(ReservationStatus.PENDING.getValue());
         reservationEntity.setExpirationDateTime(reservationRequestDTO.getReservationDateTime().plusHours(2));
 
-        reservationEntity.setUsedDateTime(null);
         reservationEntity.setTotalAmount(calculateTotalAmount(reservationRequestDTO.getNumberOfGuests()));
 
         return reservationEntity;
     }
-
 
     private static BigDecimal calculateTotalAmount(Integer numberOfGuests) {
         if (numberOfGuests == null) {
@@ -67,5 +62,4 @@ public class ReservationMapper {
 
         return reservationResponseDto;
     }
-
 }

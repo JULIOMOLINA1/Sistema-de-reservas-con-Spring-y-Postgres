@@ -22,5 +22,4 @@ public class ReservationResponseDTO {
     private String customerDni;
     private String firstName;
     private String lastName;
-
 }

@@ -9,25 +9,33 @@ import com.example.demo.reservation.entity.ReservationEntity;
 import com.example.demo.reservation.enums.ReservationStatus;
 import com.example.demo.reservation.mapper.ReservationMapper;
 import com.example.demo.reservation.repository.ReservationRepository;
+import com.example.demo.shared.exception.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final CustomerService customerService;
 
-
-    // 1. Crear reservación (el sistema reconoce al customer por DNI)
+    // Crear reservación (el sistema reconoce al customer por DNI)
     public ReservationResponseDTO createReservation(ReservationRequestDTO requestDTO){
         // Buscar customer por DNI
         CustomerEntity customer = customerService.findByDni(requestDTO.getCustomerDni());
 
         if (customer == null) {
-            throw new RuntimeException("Customer not found with DNI: " + requestDTO.getCustomerDni() + ". Please create the customer first.");
+            throw new ResourceNotFoundException("Customer not found with DNI: " + requestDTO.getCustomerDni() + ". Please create the customer first.");
         }
 
         // Crear la reservación
@@ -36,45 +44,57 @@ public class ReservationService {
 
         return ReservationMapper.toResponseDTO(savedEntity);
     }
-    // 2. Buscar mi reservación por DNI
-    public ReservationResponseDTO findReservationByDni(String dni) {
-        try {
-            Optional<ReservationEntity> reservation = reservationRepository.findLatestByCustomerDni(dni);
-            return reservation.map(ReservationMapper::toResponseDTO).orElse(null);
-        } catch (Exception e) {
-            System.err.println("Error finding reservation by DNI: " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+
+    // Buscar mis reservaciones por DNI
+    public List<ReservationResponseDTO> findPendingByDni(String dni) {
+        log.info("Starting reservation lookup for customer with DNI: {} ", dni);
+
+        return reservationRepository.findPendingByCustomerDniOrderByCreatedAtDesc(dni)
+                .stream()
+                .map(ReservationMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // 3. Cancelar mi reservación por DNI
-    public ReservationResponseDTO cancelReservationByDni(String dni) {
-        Optional<ReservationEntity> reservation = reservationRepository.findLatestActiveByCustomerDni(dni);
+    // Cancelar mi reservación por DNI
+    @Transactional
+    public void cancelReservationById(Integer reservationId) {
 
-        if (!reservation.isPresent()) {
-            return null;
-        }
+        log.info("Cancellation request received for ID: {}", reservationId);
 
-        ReservationEntity reservationToCancel = reservation.get();
+        ReservationEntity reservationToCancel = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "No active reservation was found to cancel for ID: " +reservationId
+                ));
+
         reservationToCancel.setStatus(ReservationStatus.CANCELLED.getValue());
-        ReservationEntity savedReservation = reservationRepository.save(reservationToCancel);
-
-        return ReservationMapper.toResponseDTO(savedReservation);
+        reservationRepository.save(reservationToCancel);
     }
 
-    // 4. Obtener todas las reservas (temporal para debugging)
-    public java.util.List<ReservationResponseDTO> getAllReservations() {
+    // Obtener todas las reservas (temporal para debugging)
+    public List<ReservationResponseDTO> getAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(ReservationMapper::toResponseDTO)
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 
-        public java.util.List<ReservationResponseDTO> findPendingByDni(String dni) {
-            return reservationRepository.findPendingByCustomerDniOrderByCreatedAtDesc(dni)
-                    .stream()
-                    .map(ReservationMapper::toResponseDTO)
-                    .collect(java.util.stream.Collectors.toList());
-        }
+    // Para eliminar las reservaciones pasadas automaticamente
+    @Scheduled(fixedRate = 3600000)
+    public void deleteExpiredReservations(){
+        LocalDateTime now = LocalDateTime.now();
+        reservationRepository.deleteByExpirationDateTimeBefore(now);
+        log.info("Expired reservations were eliminated before: {}", now);
+    }
 
+    // Para listar las reservaciones del día(solo ADMIN)
+    public List<ReservationResponseDTO> getReservationsForDay(LocalDate specificDate){
+
+        LocalDateTime start=specificDate.atStartOfDay();
+
+        LocalDateTime end=specificDate.atTime(LocalTime.MAX);
+
+        return reservationRepository.findByReservationDateTimeBetweenAndStatus(start, end, "pending")
+                .stream()
+                .map(ReservationMapper::toResponseDTO)
+                .collect(Collectors.toList());
+    }
 }

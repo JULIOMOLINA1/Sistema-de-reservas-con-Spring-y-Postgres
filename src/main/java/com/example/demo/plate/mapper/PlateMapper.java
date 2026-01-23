@@ -16,6 +16,7 @@ public class PlateMapper {
         plateDto.setPlateId(plateEntity.getPlateId());
         plateDto.setName(plateEntity.getName());
         plateDto.setDescription(plateEntity.getDescription());
+        plateDto.setImageUrl(plateEntity.getImageUrl());
         plateDto.setPrice(plateEntity.getPrice());
         plateDto.setIsAvailable(plateEntity.getIsAvailable());
 

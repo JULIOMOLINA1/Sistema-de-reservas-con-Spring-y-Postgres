@@ -1,5 +1,6 @@
 package com.example.demo.reservation.dto;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,6 +19,7 @@ public class ReservationRequestDTO {
     private String customerDni;
 
     @NotNull(message = "The date and time of the reservation are required.")
+    @Future(message="The reservation date must be in the future.")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime reservationDateTime;
 
@@ -27,5 +29,4 @@ public class ReservationRequestDTO {
 
     @Size(max = 100, message = "Special requests must be 100 characters or fewer.")
     private String specialRequests;
-
 }

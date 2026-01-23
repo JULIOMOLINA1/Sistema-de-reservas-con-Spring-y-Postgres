@@ -19,7 +19,6 @@ public class CustomerMapper {
         dto.setBirthDate(entity.getBirthDate());
         dto.setIsActive(entity.getIsActive());
         return dto;
-
     }
 
     public static CustomerEntity toEntity(CustomerRequestDTO dto){

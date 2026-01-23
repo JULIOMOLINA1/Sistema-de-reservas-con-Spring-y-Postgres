@@ -13,6 +13,7 @@ public class PlateResponseDTO {
     private Integer plateId;
     private String name;
     private String description;
+    private String imageUrl;
     private BigDecimal price;
     private Boolean isAvailable;
     private Set<String> categories;

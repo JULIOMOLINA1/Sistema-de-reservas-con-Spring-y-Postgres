@@ -3,11 +3,12 @@ package com.example.demo.customer.controller;
 import com.example.demo.customer.dto.CustomerRequestDTO;
 import com.example.demo.customer.dto.CustomerResponseDTO;
 import com.example.demo.customer.service.CustomerService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,27 +18,24 @@ public class CustomerController {
 
     //To create a customer
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody CustomerRequestDTO dto){
+    public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO dto){
         return ResponseEntity.ok(customerService.createCustomer(dto));
     }
 
-    //To get all customers
-    @GetMapping
-    public ResponseEntity<java.util.List<CustomerResponseDTO>> getAllCustomers(){
-        return ResponseEntity.ok(customerService.getAllCustomers());
-    }
-
-    @GetMapping("dni/{dni}")
+    //To search customers
+    @GetMapping("/dni/{dni}")
     public ResponseEntity<CustomerResponseDTO> getCustomerByDni(@PathVariable String dni){
         return ResponseEntity.ok(customerService.getCustomerByDni(dni));
     }
+
+    //to update customer's email
     @PutMapping("/dni/{dni}/email")
     public ResponseEntity<CustomerResponseDTO> updateCustomerEmailByDni(
             @PathVariable String dni,
-            @RequestBody Map<String, String> emailUpdate) {
+            @Valid @RequestBody EmailRequest request) {
 
-        String newEmail = emailUpdate.get("email");
-        CustomerResponseDTO updatedCustomer = customerService.updateCustomerEmailByDni(dni, newEmail);
-        return ResponseEntity.ok(updatedCustomer);
+       CustomerResponseDTO updatedEmail= customerService.updateCustomerEmailByDni(dni, request.email());
+       return ResponseEntity.ok(updatedEmail);
     }
+    public record EmailRequest(@NotBlank @Email String email){}
 }

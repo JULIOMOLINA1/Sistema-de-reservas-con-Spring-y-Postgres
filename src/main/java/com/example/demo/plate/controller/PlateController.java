@@ -13,18 +13,19 @@ import java.util.List;
 public class PlateController {
     private final PlateService plateService;
 
+    //To show all the plates
     @GetMapping
     public ResponseEntity<List<PlateResponseDTO>> getAllPlates(){
         return ResponseEntity.ok(plateService.getAllPlates() );
     }
 
-    // Listar todas las categorías disponibles
+    // To list available categories
     @GetMapping("/categories")
     public ResponseEntity<List<String>> getAllCategories(){
         return ResponseEntity.ok(plateService.getAllCategories());
     }
 
-    // Listar platos por ID de categoría
+    // To list plates by category ID
     @GetMapping("/categories/{categoryId}")
     public ResponseEntity<List<PlateResponseDTO>> getPlatesByCategoryId(@PathVariable Integer categoryId){
         return ResponseEntity.ok(plateService.getPlatesByCategoryId(categoryId));
