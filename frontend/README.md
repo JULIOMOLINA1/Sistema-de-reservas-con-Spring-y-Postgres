@@ -94,59 +94,6 @@ npm run build
 
 Los archivos se generarán en la carpeta `dist/`.
 
-## Estructura del Proyecto:
-
-```
-src/
-├── app/                    # Pantallas legacy (pueden estar en proceso de migración)
-│   ├── customers/
-│   ├── dishes/
-│   ├── home/
-│   ├── login/
-│   └── reservations/
-│
-├── common/                 # Tipos y componentes compartidos
-│   ├── auth/
-│   │   ├── authTypes.ts          # Tipos de autenticación
-│   │   └── ProtectedRoute.tsx    # Componente de protección de rutas
-│   ├── customers/
-│   ├── plates/
-│   └── reservations/
-│
-├── features/               # Módulos de funcionalidades (arquitectura feature-based)
-│   ├── customers/
-│   │   ├── components/    # Componentes específicos de clientes
-│   │   └── screens/        # Pantallas de clientes
-│   ├── dishes/
-│   ├── home/
-│   ├── login/
-│   └── reservations/
-│
-├── layouts/               # Componentes de layout
-│   ├── components/
-│   │   ├── FooterOverLay.tsx
-│   │   ├── HeaderOverLay.tsx
-│   │   ├── MenuOverLay.tsx
-│   │   └── SectionGeneralPages.tsx
-│   └── pages/
-│       └── GeneralPage.tsx
-│
-├── router/                # Configuración de rutas
-│   └── router.tsx
-│
-├── services/              # Servicios de API
-│   ├── auth/
-│   │   └── authService.ts
-│   ├── customers/
-│   ├── plates/
-│   └── reservations/
-│
-├── themes/                # Temas y estilos
-├── App.tsx                # Componente raíz
-├── main.tsx               # Punto de entrada
-└── styles.css             # Estilos globales
-```
-
 ## Sistema de Seguridad
 
 ### Flujo de Autenticación
